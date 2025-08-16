@@ -115,7 +115,7 @@ python scripts/init_project.py
 # Creates: projects/[your-game-name]/
 
 # 4. Start development with Claude
-claude "Read agents/market_analyst.md and analyze the market for my project"
+claude "Read agents/market_analyst.md and analyze the market for my project under the project\[project-name]"
 
 # 5. Manage your projects
 python scripts/project_manager.py
@@ -554,8 +554,8 @@ This validates:
 ## 📞 Support
 
 - **Issues**: [GitHub Issues](https://github.com/pamirtuna/gamestudio-subagents/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/pamirtuna/gamestudio-subagents/discussions)
-- **Wiki**: [Project Wiki](https://github.com/pamirtuna/gamestudio-subagents/wiki)
+- **Discussions**: Coming Soon
+- **Wiki**: Coming Soon
 
 ## 🚦 Roadmap
 
@@ -581,9 +581,9 @@ This validates:
 ## 💬 Community
 
 Join our growing community:
-- [Discord Server](#) - Real-time chat and support
-- [Forum](#) - Long-form discussions
-- [Twitter](#) - Updates and showcases
+- [Discord Server](#) - Coming Soon
+- [Forum](#) - Coming Soon
+- [Twitter](#) - Coming Soon
 
 ---
 
