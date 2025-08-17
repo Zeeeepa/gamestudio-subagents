@@ -115,7 +115,7 @@ python scripts/init_project.py
 # Creates: projects/[your-game-name]/
 
 # 4. Start development with Claude
-claude "Read agents/market_analyst.md and analyze the market for my project under the project\[project-name]"
+claude "Read agents/market_analyst.md and the project-config.json in projects/[project-name]. Perform a comprehensive market analysis and generate all reports."
 
 # 5. Manage your projects
 python scripts/project_manager.py

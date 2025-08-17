@@ -22,6 +22,7 @@ class AgentCustomizer:
     def customize_agents_for_project(self, project_path: Path, project_config: Dict[str, Any]):
         """Create customized agents for a specific project"""
         engine = project_config.get('project', {}).get('engine', 'Godot')
+        engine_version = project_config.get('project', {}).get('engine_version', 'latest')
         platform = project_config.get('project', {}).get('platform', 'PC')
         genre = project_config.get('project', {}).get('genre', 'Action')
         
@@ -29,13 +30,14 @@ class AgentCustomizer:
         project_agents_path = project_path / "agents"
         project_agents_path.mkdir(exist_ok=True)
         
-        # Load engine configuration
+        # Load engine configuration and add version
         engine_config = self.load_engine_config(engine)
+        engine_config['version'] = engine_version  # Add the actual version from project
         
         # Get active agents from project config
         active_agents = project_config.get('team', {}).get('active_agents', [])
         
-        print(f"Customizing {len(active_agents)} agents for {engine} development...")
+        print(f"Customizing {len(active_agents)} agents for {engine} v{engine_version} development...")
         
         for agent_name in active_agents:
             self.customize_agent(agent_name, project_agents_path, engine_config, project_config)
@@ -90,15 +92,16 @@ class AgentCustomizer:
                            engine_config: Dict[str, Any], project_config: Dict[str, Any]) -> str:
         """Apply engine and project specific customizations to agent content"""
         engine = engine_config.get('engine', 'Godot')
+        engine_version = project_config.get('project', {}).get('engine_version', engine_config.get('version', 'latest'))
         platform = project_config.get('project', {}).get('platform', 'PC')
         genre = project_config.get('project', {}).get('genre', 'Action')
         project_name = project_config.get('project', {}).get('name', 'Game Project')
         
-        # Add project header
+        # Add project header with version
         project_header = f"""# {agent_name.replace('_', ' ').title()} - {project_name}
 
 ## Project Configuration
-- **Engine**: {engine} {engine_config.get('version', '')}
+- **Engine**: {engine} v{engine_version}
 - **Platform**: {platform}
 - **Genre**: {genre}
 - **Project**: {project_name}
@@ -138,10 +141,11 @@ class AgentCustomizer:
     def create_engine_section(self, agent_name: str, engine_config: Dict[str, Any], platform: str) -> str:
         """Create engine-specific guidelines section"""
         engine = engine_config.get('engine', 'Godot')
+        engine_version = engine_config.get('version', 'Latest')
         
         section = f"""### {engine} Best Practices
 
-**Engine Version**: {engine_config.get('version', 'Latest')}
+**Engine Version**: {engine_version}
 **Target Platform**: {platform}
 
 """
@@ -779,12 +783,13 @@ protected:
         """Create a project-specific orchestrator"""
         project_name = project_config.get('project', {}).get('name', 'Game Project')
         engine = engine_config.get('engine', 'Godot')
+        engine_version = project_config.get('project', {}).get('engine_version', engine_config.get('version', 'latest'))
         platform = project_config.get('project', {}).get('platform', 'PC')
         
         orchestrator_content = f"""# Project Orchestrator - {project_name}
 
 ## Project-Specific Configuration
-- **Engine**: {engine} {engine_config.get('version', '')}
+- **Engine**: {engine} v{engine_version}
 - **Platform**: {platform}
 - **Project**: {project_name}
 

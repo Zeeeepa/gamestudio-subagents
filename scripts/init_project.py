@@ -124,6 +124,138 @@ class ProjectInitializer:
             "source/Config"
         ]
     
+    def create_market_analysis_docs(self, project_path, config):
+        """Create market analysis documentation for competitor research"""
+        market_research_path = project_path / "resources" / "market-research"
+        market_research_path.mkdir(exist_ok=True, parents=True)
+        
+        # Create competitor analysis template
+        competitors = config['project'].get('competitors', '').split(',')
+        for competitor in competitors:
+            if competitor.strip():
+                competitor_file = market_research_path / f"competitor_{competitor.strip().lower().replace(' ', '_')}.md"
+                competitor_content = f"""# Competitor Analysis: {competitor.strip()}
+
+## Overview
+**Game Name**: {competitor.strip()}
+**Analysis Date**: {datetime.now().strftime('%Y-%m-%d')}
+**Analyst**: Market Analyst Agent
+
+## Market Position
+- **Platform**: [To be researched]
+- **Genre**: [To be researched]
+- **Release Date**: [To be researched]
+- **Developer/Publisher**: [To be researched]
+- **Business Model**: [Premium/F2P/Subscription]
+
+## Performance Metrics
+- **Downloads/Sales**: [To be researched]
+- **Revenue**: [To be researched]
+- **User Rating**: [To be researched]
+- **Active Players**: [To be researched]
+
+## Core Features
+1. [Feature 1]
+2. [Feature 2]
+3. [Feature 3]
+
+## Strengths
+- [Strength 1]
+- [Strength 2]
+- [Strength 3]
+
+## Weaknesses
+- [Weakness 1]
+- [Weakness 2]
+- [Weakness 3]
+
+## Monetization Strategy
+- **Model**: [Description]
+- **Price Points**: [Details]
+- **Success Factors**: [What works]
+
+## Target Audience
+- **Demographics**: [Age, gender, location]
+- **Psychographics**: [Interests, behaviors]
+- **Player Motivations**: [Why they play]
+
+## Key Takeaways
+- [Insight 1]
+- [Insight 2]
+- [Insight 3]
+
+## Opportunities for Our Game
+- [Opportunity 1]
+- [Opportunity 2]
+- [Opportunity 3]
+"""
+                with open(competitor_file, 'w') as f:
+                    f.write(competitor_content)
+        
+        # Create market overview document
+        market_overview_file = market_research_path / "market_overview.md"
+        market_overview_content = f"""# Market Overview: {config['project']['genre']} Games
+
+## Project Context
+**Our Game**: {config['project']['name']}
+**Genre**: {config['project']['genre']}
+**Platform**: {config['project']['platform']}
+**Target Audience**: {config['project']['audience']}
+**Competitors Analyzed**: {config['project'].get('competitors', 'None specified')}
+
+## Market Size & Growth
+- **Total Market Size**: [To be researched]
+- **Annual Growth Rate**: [To be researched]
+- **Platform Distribution**: [To be researched]
+- **Regional Markets**: [To be researched]
+
+## Genre Trends
+- **Current Trends**: [To be researched]
+- **Emerging Patterns**: [To be researched]
+- **Declining Elements**: [To be researched]
+
+## Competitive Landscape
+- **Market Leaders**: [To be researched]
+- **Market Gaps**: [To be researched]
+- **Entry Barriers**: [To be researched]
+
+## Target Audience Analysis
+- **Size**: [To be researched]
+- **Spending Habits**: [To be researched]
+- **Preferences**: [To be researched]
+- **Unmet Needs**: [To be researched]
+
+## Revenue Models in Genre
+- **Dominant Model**: [To be researched]
+- **Average Price Points**: [To be researched]
+- **Monetization Trends**: [To be researched]
+
+## Success Factors
+- **Must-Have Features**: [To be researched]
+- **Differentiators**: [To be researched]
+- **Quality Benchmarks**: [To be researched]
+
+## Risk Assessment
+- **Market Saturation**: [Level]
+- **Competition Intensity**: [Level]
+- **Platform Risks**: [Details]
+- **Timing Considerations**: [Details]
+
+## Recommendations
+1. [Strategic recommendation 1]
+2. [Strategic recommendation 2]
+3. [Strategic recommendation 3]
+
+## Next Steps for Producer Agent
+- [ ] Review market findings
+- [ ] Adjust project scope based on market realities
+- [ ] Define competitive positioning
+- [ ] Set realistic performance targets
+- [ ] Plan go-to-market strategy
+"""
+        with open(market_overview_file, 'w') as f:
+            f.write(market_overview_content)
+    
     def create_initial_files(self, project_path, config):
         """Create initial project files"""
         
@@ -131,6 +263,9 @@ class ProjectInitializer:
         config_file = project_path / "project-config.json"
         with open(config_file, 'w') as f:
             json.dump(config, f, indent=2)
+        
+        # Create market analysis documents for producer
+        self.create_market_analysis_docs(project_path, config)
         
         # Game Design Document template
         gdd_file = project_path / "documentation/design/gdd.md"
@@ -157,7 +292,7 @@ class ProjectInitializer:
 [To be filled by Mid Game Designer]
 
 ## Technical Requirements
-**Engine**: {config['project']['engine']}
+**Engine**: {config['project']['engine']} v{config['project'].get('engine_version', 'latest')}
 **Performance Targets**: {config['metrics']['performance_target']}
 
 ## Art Direction
@@ -271,22 +406,35 @@ logs/
         with open(gitignore_file, 'w') as f:
             f.write(gitignore_content)
         
-        # Create engine-specific files
+        # Create engine-specific files with project name and version
         engine = config['project']['engine']
-        self.create_engine_files(project_path, engine)
+        engine_version = config['project'].get('engine_version', 'latest')
+        project_name = config['project']['name']
+        self.create_engine_files(project_path, engine, project_name, engine_version)
     
-    def create_engine_files(self, project_path, engine):
+    def create_engine_files(self, project_path, engine, project_name=None, engine_version=None):
         """Create engine-specific configuration files"""
-        source_path = project_path / "source"
+        # Create source path with project name
+        if project_name:
+            source_path = project_path / "source" / f"project-{project_name.lower().replace(' ', '-')}"
+        else:
+            source_path = project_path / "source" / f"project-{project_path.name}"
         source_path.mkdir(exist_ok=True, parents=True)
         
         if engine == "Godot":
             # Create project.godot file
             project_godot = source_path / "project.godot"
+            # Use appropriate version settings
+            version_string = engine_version if engine_version else "4.4"
+            if version_string.startswith("3."):
+                features_string = f'PackedStringArray("{version_string}", "GLES3")'
+            else:
+                features_string = f'PackedStringArray("{version_string}", "Forward Plus")'
+            
             project_content = f"""[application]
 
-config/name="{project_path.name}"
-config/features=PackedStringArray("4.2", "Forward Plus")
+config/name="{project_name if project_name else project_path.name}"
+config/features={features_string}
 config/icon="res://icon.svg"
 
 [rendering]
@@ -297,8 +445,9 @@ renderer/rendering_method="forward_plus"
                 f.write(project_content)
                 
         elif engine == "Unity":
-            # Create basic Unity project structure
-            project_settings = source_path / "ProjectSettings" / "ProjectSettings.asset"
+            # Create basic Unity project structure with project name
+            unity_project_path = source_path
+            project_settings = unity_project_path / "ProjectSettings" / "ProjectSettings.asset"
             project_settings.parent.mkdir(exist_ok=True, parents=True)
             
             packages_manifest = source_path / "Packages" / "manifest.json"
@@ -353,9 +502,10 @@ renderer/rendering_method="forward_plus"
             with open(packages_manifest, 'w') as f:
                 f.write(manifest_content)
                 
-        elif engine == "Unreal":
-            # Create .uproject file
-            uproject_file = source_path / f"{project_path.name}.uproject"
+        elif engine == "Unreal Engine":
+            # Create .uproject file with proper project name
+            project_file_name = project_name.replace(" ", "") if project_name else project_path.name
+            uproject_file = source_path / f"{project_file_name}.uproject"
             uproject_content = f"""{{
 	"FileVersion": 3,
 	"EngineAssociation": "5.3",
@@ -548,8 +698,29 @@ renderer/rendering_method="forward_plus"
         print("   3) Unreal Engine")
         print("   4) No preference")
         engine_choice = input("   Select (1-4): ").strip()
-        engines = ["Godot", "Unity", "Unreal", "TBD"]
+        engines = ["Godot", "Unity", "Unreal Engine", "TBD"]
         project_details['engine'] = engines[int(engine_choice)-1] if engine_choice.isdigit() else "Godot"
+        
+        # Ask for engine version based on selection
+        if project_details['engine'] != "TBD":
+            print(f"\n7a. {project_details['engine'].upper()} VERSION:")
+            if project_details['engine'] == "Godot":
+                print("   Common versions: 4.4.1, 4.3, 4.2, 3.5.3")
+                project_details['engine_version'] = input("   Enter version (or press Enter for latest): ").strip()
+                if not project_details['engine_version']:
+                    project_details['engine_version'] = "4.4.1"
+            elif project_details['engine'] == "Unity":
+                print("   Common versions: 2023.2 LTS, 2022.3 LTS, 2023.3, 2021.3 LTS")
+                project_details['engine_version'] = input("   Enter version (or press Enter for latest LTS): ").strip()
+                if not project_details['engine_version']:
+                    project_details['engine_version'] = "2023.2"
+            elif project_details['engine'] == "Unreal Engine":
+                print("   Common versions: 5.3, 5.2, 5.1, 4.27")
+                project_details['engine_version'] = input("   Enter version (or press Enter for latest): ").strip()
+                if not project_details['engine_version']:
+                    project_details['engine_version'] = "5.3"
+        else:
+            project_details['engine_version'] = "TBD"
         
         print("\n8. GENRE:")
         print("   1) Action")
@@ -589,6 +760,7 @@ renderer/rendering_method="forward_plus"
                 "audience": project_details['audience'],
                 "timeline": project_details['timeline'],
                 "engine": project_details['engine'],
+                "engine_version": project_details.get('engine_version', 'latest'),
                 "mode": project_details['mode'],
                 "competitors": project_details.get('competitors', ''),
                 "unique_selling_point": project_details.get('usp', ''),
@@ -633,6 +805,7 @@ renderer/rendering_method="forward_plus"
         print("="*60)
         print(f"\nProject: {project_details['name']}")
         print(f"Location: {project_path.absolute()}")
+        print(f"Engine: {project_details['engine']} v{project_details.get('engine_version', 'latest')}")
         print(f"Mode: {project_details['mode'].upper()}")
         print(f"Active Agents: {len(active_agents)}")
         print(f"  - {', '.join(active_agents)}")
@@ -652,9 +825,11 @@ renderer/rendering_method="forward_plus"
         print("   claude 'Read agents/project_orchestrator.md and begin development'")
         print("5. Use project-specific agents (in agents/ folder) - they're customized for your engine!")
         print("\n💡 Your agents are customized for:")
-        print(f"   - Engine: {project_details['engine']}")
+        print(f"   - Engine: {project_details['engine']} v{project_details.get('engine_version', 'latest')}")
         print(f"   - Platform: {project_details['platform']}")
         print(f"   - Genre: {project_details['genre']}")
+        print(f"\n📁 Source Project Location:")
+        print(f"   {project_path}/source/project-{project_details['name'].lower().replace(' ', '-')}")
         print("\nProject is ready for engine-optimized, market-driven development!")
         
         return project_path, config
