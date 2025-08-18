@@ -158,6 +158,7 @@ python scripts/init_project.py
 # - Enter project name
 # - Describe your game concept
 # - Select platform, audience, mode, etc.
+# - Define development rules and standards
 ```
 
 ### 4. Start Development with Claude
@@ -270,6 +271,35 @@ python scripts/init_project.py
 # 2. Focus on core mechanics
 claude "Read agents/producer_agent_v2.md and create a working prototype in 3 days"
 ```
+
+### Workflow 4: Projects with Custom Development Rules
+
+```bash
+# 1. Initialize project with custom rules
+python scripts/init_project.py
+# When prompted for Development Rules:
+# - Enter your coding standards (one per line)
+# - Examples: "Use SOLID principles", "No namespaces", "Keep functions under 30 lines"
+# - Press Enter on empty line when done
+
+# 2. Rules are saved in project-config.json
+# Check your rules:
+cat projects/[your-game]/project-config.json | grep -A 10 "development_rules"
+
+# 3. Producer enforces rules
+claude "Read agents/producer_agent.md and the project-config.json. Begin development and ensure all agents follow the development rules."
+```
+
+### Development Rules Examples
+
+Common rules you might want to set:
+- **Architecture**: "Use MVC pattern for all UI code"
+- **Performance**: "Maintain 60 FPS on mid-range hardware"  
+- **Code Quality**: "All functions must be under 30 lines"
+- **Memory**: "Use object pooling for all projectiles"
+- **Style**: "No namespaces - keep flat structure"
+- **Testing**: "Unit tests required for core mechanics"
+- **Documentation**: "Complex algorithms need code comments"
 
 ## Working with Agents
 

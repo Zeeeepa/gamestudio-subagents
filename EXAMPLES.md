@@ -80,6 +80,26 @@ claude "Read agents/master_orchestrator.md. I'm a solo developer. Activate all a
 # - Milestone management
 ```
 
+### 6. "I want strict coding standards for my team"
+
+```bash
+# Step 1: Initialize with development rules
+python scripts/init_project.py
+# When prompted for Development Rules, enter:
+# - "Follow SOLID principles for all classes"
+# - "Use Entity-Component-System architecture"
+# - "No functions longer than 30 lines"
+# - "All gameplay values must be in JSON configs"
+# - "Maintain 60 FPS on GTX 1060 hardware"
+# - "Use object pooling for enemies and projectiles"
+
+# Step 2: Producer enforces rules
+claude "Read agents/producer_agent.md and project-config.json. Start development and ensure all code follows our development rules strictly."
+
+# Result: All agent-generated code follows your standards
+# Producer will reject any code that violates the rules
+```
+
 ## 💡 Pro Tips
 
 ### Working with Design Mode

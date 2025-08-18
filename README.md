@@ -23,6 +23,7 @@ Transform your game ideas into reality with an intelligent team of specialized A
 - **📈 Market Intelligence**: Competitive analysis and market validation
 - **🎯 Engine-Optimized**: Godot, Unity, and Unreal best practices built-in
 - **🤖 Smart Agents**: Project-specific agents with engine expertise
+- **📋 Custom Development Rules**: Define project-specific coding standards and practices
 
 ## 🚀 Quick Start
 
@@ -157,6 +158,15 @@ The system starts with market validation, then project setup:
 - **Project Setup**: Organized folders and agent configuration  
 - **Documentation**: Templates and milestone schedules
 - **Analytics Setup**: Telemetry and metrics planning
+
+### 1.5. Development Rules Configuration
+During initialization, you can define custom development rules:
+- **Coding Standards**: Clean Code, SOLID, DRY, KISS principles
+- **Architecture Patterns**: MVC, ECS, State Machines, etc.
+- **Performance Requirements**: FPS targets, memory limits
+- **Project-Specific Rules**: Any custom standards for your team
+
+All rules are stored in `project-config.json` and enforced by the Producer Agent throughout development.
 
 ### 2. Development Modes
 

@@ -740,6 +740,35 @@ renderer/rendering_method="forward_plus"
         print("\n10. UNIQUE SELLING POINT:")
         project_details['usp'] = input("    What makes your game special? (one sentence): ").strip()
         
+        print("\n11. DEVELOPMENT RULES & GUIDELINES:")
+        print("    Define coding standards and practices for your project.")
+        print("    These rules will be enforced by all development agents.\n")
+        print("    Examples:")
+        print("    - 'Use SOLID principles for all class designs'")
+        print("    - 'Follow MVC architecture pattern'")
+        print("    - 'Implement object pooling for all projectiles'")
+        print("    - 'No namespaces, use flat structure'")
+        print("    - 'All UI must be data-driven'")
+        print("    - 'Use ECS for gameplay systems'")
+        print("    - 'Clean Code: meaningful names, small functions'")
+        print("    - 'Performance: maintain 60 FPS on target hardware'")
+        print("    - 'Memory: stay under 2GB RAM usage'")
+        print("    - 'Code reviews required for all gameplay systems'\n")
+
+        development_rules = []
+        print("    Enter your rules (one per line, empty line to finish):")
+        while True:
+            rule = input("    > ").strip()
+            if not rule:
+                break
+            development_rules.append(rule)
+
+        if not development_rules:
+            print("    No specific rules defined. Using default best practices.")
+            development_rules = ["Follow engine best practices", "Write clean, maintainable code"]
+
+        project_details['development_rules'] = development_rules
+        
         # Create project structure
         print(f"\nCreating project structure for '{project_details['name']}'...")
         project_path = self.create_project_structure(project_details['name'], project_details['engine'])
@@ -769,6 +798,7 @@ renderer/rendering_method="forward_plus"
                 "phase": "Market Analysis",
                 "status": "active"
             },
+            "development_rules": project_details.get('development_rules', []),
             "team": {
                 "active_agents": active_agents,
                 "lead_agent": "producer_agent",
@@ -809,6 +839,11 @@ renderer/rendering_method="forward_plus"
         print(f"Mode: {project_details['mode'].upper()}")
         print(f"Active Agents: {len(active_agents)}")
         print(f"  - {', '.join(active_agents)}")
+        print(f"\nDevelopment Rules: {len(project_details.get('development_rules', []))}")
+        for i, rule in enumerate(project_details.get('development_rules', [])[:3], 1):  # Show first 3 rules
+            print(f"  {i}. {rule}")
+        if len(project_details.get('development_rules', [])) > 3:
+            print(f"  ... and {len(project_details['development_rules']) - 3} more rules")
         print(f"\nMilestones: {len(milestones)}")
         for milestone in milestones:
             print(f"  - {milestone['name']}: {milestone['target_date']}")
@@ -819,10 +854,12 @@ renderer/rendering_method="forward_plus"
         print("1. Navigate to your project:")
         print(f"   cd projects/{project_details['name'].lower().replace(' ', '-')}")
         print("2. Review project-config.json for accuracy")
-        print("3. Start with Market Analysis:")
+        if project_details.get('development_rules'):
+            print("3. Your development rules are configured and will be enforced")
+        print("4. Start with Market Analysis:")
         print("   claude 'Read agents/market_analyst.md and analyze the market for this project'")
-        print("4. Then activate Project Orchestrator:")
-        print("   claude 'Read agents/project_orchestrator.md and begin development'")
+        print("5. Then activate Producer with rules enforcement:")
+        print("   claude 'Read agents/producer_agent.md and project-config.json. Begin coordinating development and enforce all development rules.'")
         print("5. Use project-specific agents (in agents/ folder) - they're customized for your engine!")
         print("\n💡 Your agents are customized for:")
         print(f"   - Engine: {project_details['engine']} v{project_details.get('engine_version', 'latest')}")
