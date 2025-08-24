@@ -30,11 +30,11 @@ class ProjectInitializer:
         
         # Engine-specific directory structure
         if engine == "Unity":
-            directories = self.get_unity_structure()
+            directories = self.get_unity_structure(project_name)
         elif engine == "Unreal":
-            directories = self.get_unreal_structure()
+            directories = self.get_unreal_structure(project_name)
         else:  # Godot default
-            directories = self.get_godot_structure()
+            directories = self.get_godot_structure(project_name)
         
         # Common project directories
         common_directories = [
@@ -50,9 +50,7 @@ class ProjectInitializer:
             "documentation/production/milestones",
             "documentation/production/retrospectives",
             "documentation/production/reports",
-            "resources/references",
             "resources/market-research",
-            "resources/competitor-analysis",
             "qa/test-plans",
             "qa/bug-reports",
             "qa/playtesting",
@@ -70,58 +68,61 @@ class ProjectInitializer:
             
         return project_path
     
-    def get_godot_structure(self):
+    def get_godot_structure(self, project_name):
         """Godot-specific folder structure"""
+        folder_name = f"source/project-{project_name.lower().replace(' ', '-')}"
         return [
-            "source/scenes",
-            "source/scripts", 
-            "source/assets/sprites",
-            "source/assets/models",
-            "source/assets/audio",
-            "source/assets/ui",
-            "source/assets/shaders",
-            "source/assets/fonts",
-            "source/autoload",
-            "source/addons"
+            f"{folder_name}/scenes",
+            f"{folder_name}/scripts", 
+            f"{folder_name}/assets/sprites",
+            f"{folder_name}/assets/models",
+            f"{folder_name}/assets/audio",
+            f"{folder_name}/assets/ui",
+            f"{folder_name}/assets/shaders",
+            f"{folder_name}/assets/fonts",
+            f"{folder_name}/autoload",
+            f"{folder_name}/addons"
         ]
     
-    def get_unity_structure(self):
+    def get_unity_structure(self, project_name):
         """Unity-specific folder structure"""
+        folder_name = f"source/project-{project_name.lower().replace(' ', '-')}"
         return [
-            "source/Assets/Scripts",
-            "source/Assets/Scenes", 
-            "source/Assets/Prefabs",
-            "source/Assets/Materials",
-            "source/Assets/Textures",
-            "source/Assets/Models",
-            "source/Assets/Audio",
-            "source/Assets/Animations",
-            "source/Assets/Shaders",
-            "source/Assets/StreamingAssets",
-            "source/Assets/Editor",
-            "source/Assets/Resources",
-            "source/Assets/Plugins",
-            "source/Packages",
-            "source/ProjectSettings"
+            f"{folder_name}/Assets/Scripts",
+            f"{folder_name}/Assets/Scenes", 
+            f"{folder_name}/Assets/Prefabs",
+            f"{folder_name}/Assets/Materials",
+            f"{folder_name}/Assets/Textures",
+            f"{folder_name}/Assets/Models",
+            f"{folder_name}/Assets/Audio",
+            f"{folder_name}/Assets/Animations",
+            f"{folder_name}/Assets/Shaders",
+            f"{folder_name}/Assets/StreamingAssets",
+            f"{folder_name}/Assets/Editor",
+            f"{folder_name}/Assets/Resources",
+            f"{folder_name}/Assets/Plugins",
+            f"{folder_name}/Packages",
+            f"{folder_name}/ProjectSettings"
         ]
     
-    def get_unreal_structure(self):
+    def get_unreal_structure(self, project_name):
         """Unreal Engine-specific folder structure"""
+        folder_name = f"source/project-{project_name.lower().replace(' ', '-')}"
         return [
-            "source/Content/Blueprints",
-            "source/Content/Maps",
-            "source/Content/Materials", 
-            "source/Content/Meshes",
-            "source/Content/Textures",
-            "source/Content/Audio",
-            "source/Content/Animations",
-            "source/Content/UI",
-            "source/Content/Particles",
-            "source/Content/Characters",
-            "source/Source/Public",
-            "source/Source/Private",
-            "source/Plugins",
-            "source/Config"
+            f"{folder_name}/Content/Blueprints",
+            f"{folder_name}/Content/Maps",
+            f"{folder_name}/Content/Materials", 
+            f"{folder_name}/Content/Meshes",
+            f"{folder_name}/Content/Textures",
+            f"{folder_name}/Content/Audio",
+            f"{folder_name}/Content/Animations",
+            f"{folder_name}/Content/UI",
+            f"{folder_name}/Content/Particles",
+            f"{folder_name}/Content/Characters",
+            f"{folder_name}/Source/Public",
+            f"{folder_name}/Source/Private",
+            f"{folder_name}/Plugins",
+            f"{folder_name}/Config"
         ]
     
     def create_market_analysis_docs(self, project_path, config):
@@ -315,8 +316,9 @@ class ProjectInitializer:
         with open(gdd_file, 'w') as f:
             f.write(gdd_content)
         
-        # README for source
-        readme_file = project_path / "source/README.md"
+        # README for project folder
+        folder_name = f"source/project-{config['project']['name'].lower().replace(' ', '-')}"
+        readme_file = project_path / folder_name / "README.md"
         readme_content = f"""# {config['project']['name']} - Source Code
 
 ## Engine: {config['project']['engine']}
@@ -414,7 +416,7 @@ logs/
     
     def create_engine_files(self, project_path, engine, project_name=None, engine_version=None):
         """Create engine-specific configuration files"""
-        # Create source path with project name
+        # Create project folder under source with proper name
         if project_name:
             source_path = project_path / "source" / f"project-{project_name.lower().replace(' ', '-')}"
         else:
@@ -865,7 +867,7 @@ renderer/rendering_method="forward_plus"
         print(f"   - Engine: {project_details['engine']} v{project_details.get('engine_version', 'latest')}")
         print(f"   - Platform: {project_details['platform']}")
         print(f"   - Genre: {project_details['genre']}")
-        print(f"\n📁 Source Project Location:")
+        print(f"\n📁 Engine Project Location:")
         print(f"   {project_path}/source/project-{project_details['name'].lower().replace(' ', '-')}")
         print("\nProject is ready for engine-optimized, market-driven development!")
         
